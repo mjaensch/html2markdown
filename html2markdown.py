@@ -213,9 +213,9 @@ def _markdownify(tag, _listType=None, _blockQuote=False, _listIndex=1):
 		tag.string = '\n---\n'
 		tag.unwrap()
 	elif tag.name == 'pre':
-		tag.insert_before('\n\n')
-		tag.insert_after('\n\n')
 		if tag.code:
+			tag.insert_before('\n```\n')
+			tag.insert_after('\n```\n')
 			if not _supportedAttrs(tag.code):
 				return
 			for child in tag.code.find_all(recursive=False):
@@ -235,6 +235,9 @@ def _markdownify(tag, _listType=None, _blockQuote=False, _listIndex=1):
 				line = line.replace(u'\xa0', ' ')
 				lines[i] = '    %s' % line
 			tag.replace_with(BeautifulSoup('\n'.join(lines), 'html.parser'))
+		else:
+			tag.insert_before('\n\n')
+			tag.insert_after('\n\n')
 		return
 	elif tag.name == 'code':
 		# inline code
